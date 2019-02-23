@@ -131,6 +131,7 @@ char Gs1Object::gs() const
 bool Gs1Object::isDigit(char ch) const
 {
     // optimization required
+
     static const QByteArray table("0123456789");
     return table.contains(ch);
 }
@@ -138,6 +139,7 @@ bool Gs1Object::isDigit(char ch) const
 bool Gs1Object::isAlpha(char ch) const
 {
     // optimization required
+
     static const QByteArray table("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!\"%&\'()*+-./_,:;=<>?");
     return table.contains(ch);
 }

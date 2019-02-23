@@ -4,7 +4,7 @@
 Gs1Test::Gs1Test(QObject *parent)
     : QObject(parent)
 {
-    // negative/positive tests reqired for all types of Gs1Value content
+    // negative/positive tests reqired for all cases of Gs1Value content
 }
 
 void Gs1Test::feedBackTest()
