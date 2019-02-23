@@ -63,8 +63,6 @@ QString Gs1Value::toString() const
 
 QDate Gs1Value::toDate() const
 {
-    // section 7.12
-
     const int now = QDate::currentDate().year();
 
     int century = now / 100;

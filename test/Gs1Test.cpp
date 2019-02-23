@@ -23,8 +23,6 @@ void Gs1Test::feedBackTest()
     object.insert(Gs1Object::AI311_LENGTH_M, Gs1Value(length, 3));
 
     const QByteArray gs1 = object.toGs1Code();
-    qDebug() << gs1;
-
     Gs1Object clone = Gs1Object::fromGs1Code(gs1);
 
     QCOMPARE(object, clone);
