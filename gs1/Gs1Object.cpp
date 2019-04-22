@@ -205,7 +205,7 @@ Gs1Value Gs1Object::take(Gs1Object::Key key)
     return m_data.take(key);
 }
 
-Gs1Value Gs1Object::value(Gs1Object::Key key, const Gs1Value &defaultValue)
+Gs1Value Gs1Object::value(Gs1Object::Key key, const Gs1Value &defaultValue) const
 {
     return m_data.value(key, defaultValue);
 }
