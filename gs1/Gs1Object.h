@@ -172,6 +172,7 @@ public:
     Gs1Object();
 
     bool isEmpty() const;
+    bool contains(Key key) const;
 
     void clear();
     void remove(Key key);

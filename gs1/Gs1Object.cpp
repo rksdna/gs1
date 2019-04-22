@@ -185,6 +185,11 @@ bool Gs1Object::isEmpty() const
     return m_data.isEmpty();
 }
 
+bool Gs1Object::contains(Gs1Object::Key key) const
+{
+    return m_data.contains(key);
+}
+
 void Gs1Object::clear()
 {
     m_data.clear();
