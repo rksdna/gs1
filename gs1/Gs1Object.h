@@ -172,12 +172,13 @@ public:
     Gs1Object();
 
     bool isEmpty() const;
+    bool contains(Key key) const;
 
     void clear();
     void remove(Key key);
     void insert(Key key, const Gs1Value &value);
     Gs1Value take(Key key);
-    Gs1Value value(Key key, const Gs1Value &defaultValue = Gs1Value());
+    Gs1Value value(Key key, const Gs1Value &defaultValue = Gs1Value()) const;
 
     bool operator ==(const Gs1Object &rhs) const;
     bool operator !=(const Gs1Object &rhs) const;
