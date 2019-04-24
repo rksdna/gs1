@@ -183,8 +183,7 @@ public:
     bool operator ==(const Gs1Object &rhs) const;
     bool operator !=(const Gs1Object &rhs) const;
 
-    QByteArray toGs1Code() const;
-
+    QByteArray toGs1Code(bool hri = false) const;
     QString toPrettyString() const;
 
 private:
@@ -193,12 +192,13 @@ private:
     bool isAlpha(char ch) const;
     bool readItem(Key key, const QByteArray &code, int &position);
     bool readItem(const QByteArray &code, int &position);
-    bool writeItem(Key key, QByteArray &code) const;
+    bool writeItem(Key key, QByteArray &code, bool hri) const;
 
 private:
     static QMap<Gs1Object::Key, QByteArray> m_patterns;
 
 private:
+    QList<Key> m_order;
     QMap<Key, Gs1Value> m_data;
 };
 

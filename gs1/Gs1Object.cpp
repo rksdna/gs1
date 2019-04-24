@@ -193,20 +193,24 @@ bool Gs1Object::contains(Gs1Object::Key key) const
 void Gs1Object::clear()
 {
     m_data.clear();
+    m_order.clear();
 }
 
 void Gs1Object::remove(Gs1Object::Key key)
 {
     m_data.remove(key);
+    m_order.removeOne(key);
 }
 
 void Gs1Object::insert(Gs1Object::Key key, const Gs1Value &value)
 {
     m_data.insert(key, value);
+    m_order.append(key);
 }
 
 Gs1Value Gs1Object::take(Gs1Object::Key key)
 {
+    m_order.removeOne(key);
     return m_data.take(key);
 }
 
@@ -225,12 +229,12 @@ bool Gs1Object::operator !=(const Gs1Object &rhs) const
     return m_data != rhs.m_data;
 }
 
-QByteArray Gs1Object::toGs1Code() const
+QByteArray Gs1Object::toGs1Code(bool hri) const
 {
     QByteArray code;
-    foreach (Key key, m_data.keys())
+    foreach (Key key, m_order)
     {
-        if (!writeItem(key, code))
+        if (!writeItem(key, code, hri))
             return QByteArray();
     }
 
@@ -241,8 +245,8 @@ QString Gs1Object::toPrettyString() const
 {
     QStringList items;
     const QMetaEnum metaEnum = QMetaEnum::fromType<Gs1Object::Key>();
-    foreach (Key key, m_data.keys())
-        items.append(QString("%1: %2").arg(metaEnum.valueToKey(key), m_data.value(key).toPrettyString()));
+    foreach (Key key, m_order)
+        items.append(QString("(%1)%2").arg(metaEnum.valueToKey(key), m_data.value(key).toPrettyString()));
 
     return items.join(", ");
 }
@@ -335,6 +339,7 @@ bool Gs1Object::readItem(Key key, const QByteArray &code, int &position)
     }
 
     position = index;
+    m_order.append(key);
     m_data.insert(key, buffer);
     return true;
 }
@@ -350,10 +355,14 @@ bool Gs1Object::readItem(const QByteArray &code, int &position)
     return false;
 }
 
-bool Gs1Object::writeItem(Key key, QByteArray &code) const
+bool Gs1Object::writeItem(Key key, QByteArray &code, bool hri) const
 {
     int index = 0;
     QByteArray buffer;
+    if (hri)
+        buffer.append('(');
+
+    bool first = hri;
     const QByteArray data = m_data.value(key).data();
     foreach (char pattern, m_patterns.value(key))
     {
@@ -381,6 +390,12 @@ bool Gs1Object::writeItem(Key key, QByteArray &code) const
             if (!isDigit(ch))
                 return false;
 
+            if (first)
+            {
+                buffer.append(')');
+                first = false;
+            }
+
             buffer.append(ch);
             index++;
             break;
@@ -393,12 +408,18 @@ bool Gs1Object::writeItem(Key key, QByteArray &code) const
             if (!isAlpha(ch))
                 return false;
 
+            if (first)
+            {
+                buffer.append(')');
+                first = false;
+            }
+
             buffer.append(ch);
             index++;
             break;
 
         case '`':
-            if (key != m_data.lastKey())
+            if (!hri && key != m_data.lastKey())
                 buffer.append(gs());
 
             break;
